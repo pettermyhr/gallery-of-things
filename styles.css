@@ -1,0 +1,611 @@
+/* ==========================================================================
+   Gallery of Things - Stylesheet
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Font Face
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Acid Grotesk';
+  src: url('fonts/FFF Acid Grotesk/FFF-AcidGrotesk-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties (easy to sync with Sanity later)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colors */
+  --color-primary: #2c3e50;
+  --color-secondary: #3498db;
+  --color-accent: #e74c3c;
+  --color-background: #000000;
+  --color-surface: #111111;
+  --color-text: #ffffff;
+  --color-text-light: #aaaaaa;
+  --color-border: #333333;
+  
+  /* Gallery */
+  --gallery-gap: 6px;
+  --gallery-columns: 5;
+  --gallery-radius: 8px;
+  
+  /* Hover effect - adjust these values */
+  --hover-scale: 1.05;
+  --hover-opacity: 0.4;
+  --hover-blur: 4px;
+  --hover-speed: 500ms;
+
+  /* Typography */
+  --font-primary: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: var(--font-primary);
+  --font-size-base: 16px;
+  --line-height-base: 1.6;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 4rem;
+
+  /* Layout */
+  --container-max-width: 1200px;
+  --container-padding: var(--spacing-md);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   Reset & Base
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+/* Custom scrollbar - global */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-light);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-light) var(--color-surface);
+}
+
+body {
+  font-family: var(--font-primary);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-sm);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   Layout Components
+   -------------------------------------------------------------------------- */
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+.section {
+  padding: var(--spacing-xl) 0;
+}
+
+.section--surface {
+  background-color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.header {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-md) 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.header__logo:hover {
+  color: var(--color-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+.nav__list {
+  display: flex;
+  gap: var(--spacing-lg);
+  list-style: none;
+}
+
+.nav__link {
+  color: var(--color-text);
+  font-weight: 500;
+  padding: var(--spacing-xs) 0;
+  position: relative;
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-secondary);
+  transition: width var(--transition-base);
+}
+
+.nav__link:hover::after,
+.nav__link--active::after {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section
+   -------------------------------------------------------------------------- */
+.hero {
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.hero__title {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-light);
+  max-width: 600px;
+  margin: 0 auto var(--spacing-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Grid
+   -------------------------------------------------------------------------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  gap: var(--gallery-gap);
+  padding: var(--gallery-gap);
+}
+
+.gallery__item {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--gallery-radius);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  position: relative;
+}
+
+.gallery__item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gallery__item img {
+  width: 100%;
+  aspect-ratio: 4 / 6;
+  object-fit: cover;
+  border-radius: var(--gallery-radius);
+  transition: transform var(--hover-speed) ease, 
+              opacity var(--hover-speed) ease, 
+              filter var(--hover-speed) ease;
+  will-change: transform, opacity, filter;
+  pointer-events: none;
+}
+
+.gallery__item:hover img {
+  transform: scale(var(--hover-scale));
+  opacity: var(--hover-opacity);
+  filter: blur(var(--hover-blur));
+}
+
+.gallery__item-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 24px));
+  font-family: 'Acid Grotesk', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+  padding: 0 1rem;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gallery__item:hover .gallery__item-title {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* --------------------------------------------------------------------------
+   Content Grid (for gallery items - maps to Sanity array of references)
+   -------------------------------------------------------------------------- */
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.grid--2col {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid--3col {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* --------------------------------------------------------------------------
+   Card Component (reusable - maps to Sanity document type)
+   -------------------------------------------------------------------------- */
+.card {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card__image {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card__content {
+  padding: var(--spacing-md);
+}
+
+.card__title {
+  margin-bottom: var(--spacing-xs);
+}
+
+.card__excerpt {
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+}
+
+.card__link {
+  display: block;
+  color: inherit;
+}
+
+.card__link:hover {
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+.btn--primary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn--outline {
+  background-color: transparent;
+  border: 2px solid var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.btn--outline:hover {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.footer {
+  background-color: var(--color-primary);
+  color: white;
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+}
+
+.footer a {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer a:hover {
+  color: white;
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+}
+
+.footer__copyright {
+  width: 100%;
+  text-align: center;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Page Header (for subpages)
+   -------------------------------------------------------------------------- */
+.page-header {
+  padding: var(--spacing-xl) 0;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-header__title {
+  margin-bottom: var(--spacing-xs);
+}
+
+.page-header__description {
+  color: var(--color-text-light);
+  max-width: 700px;
+}
+
+/* --------------------------------------------------------------------------
+   Content Block (maps to Sanity portable text)
+   -------------------------------------------------------------------------- */
+.content-block {
+  max-width: 800px;
+}
+
+.content-block p,
+.content-block ul,
+.content-block ol {
+  margin-bottom: var(--spacing-md);
+}
+
+.content-block h2,
+.content-block h3 {
+  margin-top: var(--spacing-lg);
+}
+
+.content-block img {
+  margin: var(--spacing-lg) 0;
+  border-radius: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Item Page - Horizontal Gallery
+   -------------------------------------------------------------------------- */
+.item-page {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.item-gallery {
+  display: flex;
+  gap: var(--gallery-gap);
+  padding: var(--gallery-gap);
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Custom scrollbar */
+.item-gallery::-webkit-scrollbar {
+  height: 4px;
+}
+
+.item-gallery::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+.item-gallery::-webkit-scrollbar-thumb {
+  background: var(--color-text-light);
+  border-radius: 2px;
+}
+
+.item-gallery::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text);
+}
+
+/* Firefox */
+.item-gallery {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-light) var(--color-surface);
+}
+
+.item-gallery__item {
+  flex-shrink: 0;
+  height: calc(100vh - var(--gallery-gap) * 2);
+  border-radius: var(--gallery-radius);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.item-gallery__item.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.item-gallery__item img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: var(--gallery-radius);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  :root {
+    --gallery-columns: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 15px;
+    --gallery-columns: 1;
+  }
+
+  .hero__title {
+    font-size: 2rem;
+  }
+
+  .header__inner {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .nav__list {
+    gap: var(--spacing-md);
+  }
+
+  .footer__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Item page mobile - vertical scroll */
+  .item-page {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+  }
+
+  .item-gallery {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .item-gallery__item {
+    height: auto;
+    width: calc(100vw - var(--gallery-gap) * 2);
+  }
+
+  .item-gallery__item img {
+    width: 100%;
+    height: auto;
+  }
+}
