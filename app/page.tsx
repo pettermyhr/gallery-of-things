@@ -1,9 +1,11 @@
 import { client } from '@/lib/sanity';
 import { projectsQuery } from '@/lib/queries';
 import Gallery from '@/components/Gallery';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 async function getProjects() {
   try {
