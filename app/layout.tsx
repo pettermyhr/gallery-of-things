@@ -10,7 +10,11 @@ export const metadata: Metadata = {
 };
 
 async function getSiteSettings() {
-  return client.fetch(siteSettingsQuery);
+  try {
+    return await client.fetch(siteSettingsQuery);
+  } catch {
+    return null;
+  }
 }
 
 export default async function RootLayout({

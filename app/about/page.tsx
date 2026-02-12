@@ -3,8 +3,14 @@ import { aboutPageQuery } from '@/lib/queries';
 import AboutSlideshow from '@/components/AboutSlideshow';
 import CollapseButtons from '@/components/CollapseButtons';
 
+export const dynamic = 'force-dynamic';
+
 async function getAboutPage() {
-  return client.fetch(aboutPageQuery);
+  try {
+    return await client.fetch(aboutPageQuery);
+  } catch {
+    return null;
+  }
 }
 
 export default async function AboutPage() {

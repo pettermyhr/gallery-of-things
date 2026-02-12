@@ -4,12 +4,18 @@ import ItemGallery from '@/components/ItemGallery';
 import DetailsPanel from '@/components/DetailsPanel';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 async function getProject(slug: string) {
-  return client.fetch(projectQuery, { slug });
+  try {
+    return await client.fetch(projectQuery, { slug });
+  } catch {
+    return null;
+  }
 }
 
 export default async function ProjectPage({ params }: PageProps) {
@@ -22,7 +28,7 @@ export default async function ProjectPage({ params }: PageProps) {
 
   return (
     <main className="item-page">
-      <ItemGallery images={project.images} />
+      <ItemGallery images={project.images || []} />
       <DetailsPanel
         title={project.title}
         description={project.description}
