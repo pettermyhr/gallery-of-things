@@ -1,0 +1,41 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Menu from './Menu';
+import { client } from '@/lib/sanity';
+import { siteSettingsQuery } from '@/lib/queries';
+
+interface SiteSettings {
+  siteTitle?: string;
+  contactEmail?: string;
+  theme?: 'dark' | 'light';
+}
+
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const data = await client.fetch(siteSettingsQuery);
+        setSettings(data);
+        if (data?.theme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (error) {
+        console.error('Failed to fetch settings:', error);
+      }
+    }
+    fetchSettings();
+  }, []);
+
+  return (
+    <>
+      <Menu
+        siteTitle={settings?.siteTitle || 'Gallery of Things'}
+        contactEmail={settings?.contactEmail}
+      />
+      {children}
+    </>
+  );
+}
