@@ -3,11 +3,16 @@ import { projectsQuery } from '@/lib/queries';
 import Gallery from '@/components/Gallery';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getProjects() {
   try {
-    return await client.fetch(projectsQuery) || [];
-  } catch {
+    console.log('Fetching projects...');
+    const projects = await client.fetch(projectsQuery);
+    console.log('Projects fetched:', projects?.length || 0);
+    return projects || [];
+  } catch (error) {
+    console.error('Error fetching projects:', error);
     return [];
   }
 }
