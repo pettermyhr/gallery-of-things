@@ -53,3 +53,4 @@ Create `.env.local` for local development:
 NEXT_PUBLIC_SANITY_PROJECT_ID=n2p9wnnu
 NEXT_PUBLIC_SANITY_DATASET=production
 ```
+
