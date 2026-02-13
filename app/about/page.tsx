@@ -2,12 +2,15 @@ import { client } from '@/lib/sanity';
 import { aboutPageQuery } from '@/lib/queries';
 import AboutSlideshow from '@/components/AboutSlideshow';
 import CollapseButtons from '@/components/CollapseButtons';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getAboutPage() {
+  noStore();
   try {
-    return await client.fetch(aboutPageQuery);
+    return await client.fetch(aboutPageQuery, {}, { cache: 'no-store' });
   } catch {
     return null;
   }

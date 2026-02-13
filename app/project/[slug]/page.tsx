@@ -1,18 +1,20 @@
 import { client } from '@/lib/sanity';
 import { projectQuery } from '@/lib/queries';
-import ItemGallery from '@/components/ItemGallery';
 import DetailsPanel from '@/components/DetailsPanel';
 import { notFound } from 'next/navigation';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 async function getProject(slug: string) {
+  noStore();
   try {
-    return await client.fetch(projectQuery, { slug });
+    return await client.fetch(projectQuery, { slug }, { cache: 'no-store' });
   } catch {
     return null;
   }

@@ -1,17 +1,15 @@
 import { client } from '@/lib/sanity';
 import { projectsQuery } from '@/lib/queries';
 import Gallery from '@/components/Gallery';
-import { headers } from 'next/headers';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-export const fetchCache = 'force-no-store';
 
 async function getProjects() {
+  noStore();
   try {
-    console.log('Fetching projects...');
-    const projects = await client.fetch(projectsQuery);
-    console.log('Projects fetched:', projects?.length || 0);
+    const projects = await client.fetch(projectsQuery, {}, { cache: 'no-store' });
     return projects || [];
   } catch (error) {
     console.error('Error fetching projects:', error);

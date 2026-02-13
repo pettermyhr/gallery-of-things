@@ -1,12 +1,15 @@
 import { client } from '@/lib/sanity';
 import { highlightsQuery } from '@/lib/queries';
 import HighlightsGallery from '@/components/HighlightsGallery';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getHighlights() {
+  noStore();
   try {
-    return await client.fetch(highlightsQuery);
+    return await client.fetch(highlightsQuery, {}, { cache: 'no-store' });
   } catch {
     return null;
   }
