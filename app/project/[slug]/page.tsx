@@ -27,13 +27,23 @@ export default async function ProjectPage({ params }: PageProps) {
   }
 
   return (
-    <main className="item-page">
-      <ItemGallery images={project.images || []} />
+    <>
+      <main className="item-gallery">
+        {project.images?.map((image: any, index: number) => (
+          <div key={index} className="item-gallery__item">
+            <img 
+              src={`https://cdn.sanity.io/images/n2p9wnnu/production/${image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-png', '.png')}`}
+              alt={image.alt || `Image ${index + 1}`}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          </div>
+        ))}
+      </main>
       <DetailsPanel
         title={project.title}
         description={project.description}
         technicalInfo={project.technicalInfo}
       />
-    </main>
+    </>
   );
 }

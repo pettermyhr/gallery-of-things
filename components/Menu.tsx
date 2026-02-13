@@ -37,7 +37,7 @@ export default function Menu({ siteTitle, contactEmail }: MenuProps) {
   return (
     <nav className={`menu ${isOpen ? 'is-open' : ''}`} ref={menuRef}>
       <div className="menu__header">
-        <Link href="/" className="menu__title type type-h1 type--uppercase">
+        <Link href="/" className="menu__title type type-h2 type--uppercase">
           {titleChars}
         </Link>
         <button

@@ -17,31 +17,32 @@ export default function DetailsPanel({ title, description, technicalInfo }: Deta
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={`details ${isOpen ? 'is-open' : ''}`}>
-      <div
-        className="details__header"
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-      >
-        <span className="details__label type type-h1">{title}</span>
-        <div className="details__icon"></div>
-      </div>
-      <div className="details__body">
+    <div 
+      className={`details ${isOpen ? 'is-open' : ''}`}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <div className="details__content">
         <div className="details__text">
+          <h1 className="type type-h1">{title}</h1>
           {description && (
-            <p className="type type-h2" style={{ marginBottom: '16px' }}>{description}</p>
+            <h2 className="type type-h2">{description}</h2>
           )}
           {technicalInfo && technicalInfo.length > 0 && (
-            <div className="details__info">
+            <dl className="details__info">
               {technicalInfo.map((info, index) => (
                 <div key={index} className="details__info-row">
-                  <span className="type type-h3 type--muted">{info.label}</span>
-                  <span className="type type-h3">{info.value}</span>
+                  <dt className="type type-h3 type--muted">{info.label}</dt>
+                  <dd className="type type-h3">{info.value}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           )}
         </div>
+      </div>
+      <div className="details__header">
+        <span className="details__label type type-h2 type--uppercase">Details</span>
+        <span className="details__icon"></span>
       </div>
     </div>
   );
