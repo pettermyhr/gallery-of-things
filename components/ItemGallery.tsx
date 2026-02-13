@@ -180,7 +180,7 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
       {displayImages.map((image) => (
         <div key={image.uniqueId} className="item-gallery__item">
           <Image
-            src={urlFor(image.asset).height(1200).url()}
+            src={urlFor(image.asset).height(2000).quality(90).url()}
             alt={image.alt || 'Project image'}
             width={800}
             height={1200}
