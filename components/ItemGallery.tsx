@@ -20,10 +20,12 @@ interface ItemGalleryProps {
 export default function ItemGallery({ images }: ItemGalleryProps) {
   const galleryRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<any>(null);
-  const isLoadingRef = useRef(false);
+  const isLoadingLeftRef = useRef(false);
+  const isLoadingRightRef = useRef(false);
   const [displayImages, setDisplayImages] = useState<DisplayImage[]>([]);
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
   const originalImages = useRef<GalleryImage[]>([]);
+  const initialScrollDone = useRef(false);
 
   // Add item-page class to body
   useEffect(() => {
@@ -35,15 +37,19 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
     };
   }, []);
 
-  // Initialize display images
+  // Initialize display images with sets on both sides
   useEffect(() => {
     if (!images.length) return;
     originalImages.current = images;
     
-    // Start with original + 2 clones
+    // Start with 3 sets left + original + 3 sets right
     const initial: DisplayImage[] = [];
     for (let i = 0; i < 3; i++) {
-      initial.push(...images.map((img, idx) => ({ ...img, uniqueId: `set-${i}-${idx}` })));
+      initial.push(...images.map((img, idx) => ({ ...img, uniqueId: `left-${i}-${idx}` })));
+    }
+    initial.push(...images.map((img, idx) => ({ ...img, uniqueId: `center-${idx}` })));
+    for (let i = 0; i < 3; i++) {
+      initial.push(...images.map((img, idx) => ({ ...img, uniqueId: `right-${i}-${idx}` })));
     }
     setDisplayImages(initial);
   }, [images]);
@@ -55,6 +61,17 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
     import('lenis').then(({ default: Lenis }) => {
       const gallery = galleryRef.current;
       if (!gallery) return;
+
+      // Scroll to center on init (to the middle set)
+      if (!initialScrollDone.current && !isTabletOrMobile) {
+        requestAnimationFrame(() => {
+          const itemWidth = gallery.firstElementChild?.getBoundingClientRect().width || 0;
+          const gap = 6;
+          const centerOffset = (3 * originalImages.current.length) * (itemWidth + gap);
+          gallery.scrollLeft = centerOffset;
+          initialScrollDone.current = true;
+        });
+      }
 
       lenisRef.current = new Lenis({
         duration: 1.2,
@@ -82,30 +99,36 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
   }, [displayImages.length > 0, isTabletOrMobile]);
 
   const checkScroll = useCallback(() => {
-    if (!galleryRef.current || isLoadingRef.current) return;
+    if (!galleryRef.current) return;
 
     if (isTabletOrMobile) {
       const scrollTop = lenisRef.current?.scroll || window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       
-      if (scrollTop + windowHeight >= documentHeight - 800) {
-        loadMoreImages();
+      if (scrollTop + windowHeight >= documentHeight - 800 && !isLoadingRightRef.current) {
+        appendImages();
       }
     } else {
       const scrollLeft = lenisRef.current?.scroll || 0;
       const containerWidth = galleryRef.current.scrollWidth;
       const viewportWidth = galleryRef.current.clientWidth;
       
-      if (scrollLeft + viewportWidth >= containerWidth - 800) {
-        loadMoreImages();
+      // Append when near right edge
+      if (scrollLeft + viewportWidth >= containerWidth - 800 && !isLoadingRightRef.current) {
+        appendImages();
+      }
+      
+      // Prepend when near left edge
+      if (scrollLeft < 800 && !isLoadingLeftRef.current) {
+        prependImages();
       }
     }
   }, [isTabletOrMobile]);
 
-  const loadMoreImages = () => {
-    if (isLoadingRef.current) return;
-    isLoadingRef.current = true;
+  const appendImages = () => {
+    if (isLoadingRightRef.current) return;
+    isLoadingRightRef.current = true;
 
     setDisplayImages(prev => {
       const newImages = originalImages.current.map((img, idx) => ({
@@ -117,7 +140,38 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
 
     requestAnimationFrame(() => {
       lenisRef.current?.resize();
-      isLoadingRef.current = false;
+      isLoadingRightRef.current = false;
+    });
+  };
+
+  const prependImages = () => {
+    if (isLoadingLeftRef.current || !galleryRef.current) return;
+    isLoadingLeftRef.current = true;
+
+    lenisRef.current?.stop();
+
+    const gallery = galleryRef.current;
+    const scrollLeft = gallery.scrollLeft;
+    const firstItem = gallery.firstElementChild as HTMLElement;
+    const itemWidth = firstItem?.getBoundingClientRect().width || 0;
+    const gap = 6;
+
+    setDisplayImages(prev => {
+      const newImages = originalImages.current.map((img, idx) => ({
+        ...img,
+        uniqueId: `prepend-${Date.now()}-${idx}`
+      }));
+      return [...newImages, ...prev];
+    });
+
+    requestAnimationFrame(() => {
+      // Adjust scroll to compensate for prepended items
+      const addedWidth = originalImages.current.length * (itemWidth + gap);
+      gallery.scrollLeft = scrollLeft + addedWidth;
+
+      lenisRef.current?.start();
+      lenisRef.current?.resize();
+      isLoadingLeftRef.current = false;
     });
   };
 
