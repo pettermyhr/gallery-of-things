@@ -17,6 +17,15 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
   const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Add item-page class to body for proper styling
+    document.body.classList.add('item-page');
+    
+    return () => {
+      document.body.classList.remove('item-page');
+    };
+  }, []);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -32,12 +41,12 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
     items?.forEach((item) => observer.observe(item));
 
     return () => observer.disconnect();
-  }, []);
+  }, [images]);
 
   if (!images?.length) return null;
 
   return (
-    <div className="item-gallery" ref={galleryRef}>
+    <main className="item-gallery" ref={galleryRef}>
       {images.map((image, index) => (
         <div key={index} className="item-gallery__item">
           <Image
@@ -50,6 +59,6 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
           />
         </div>
       ))}
-    </div>
+    </main>
   );
 }
