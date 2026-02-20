@@ -193,7 +193,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
         const content = (
           <>
             <Image
-              src={urlFor(item.thumbnail).width(1200).height(1800).quality(90).url()}
+              src={urlFor(item.thumbnail).quality(100).auto('format').url()}
               alt={item.thumbnailAlt || item.title}
               width={1200}
               height={1800}

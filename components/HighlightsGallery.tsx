@@ -188,7 +188,7 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
       {displayImages.map((image) => (
         <div key={image.uniqueId} className="gallery__item">
           <Image
-            src={urlFor(image.asset).width(1200).height(1800).quality(90).url()}
+            src={urlFor(image.asset).quality(100).auto('format').url()}
             alt={image.alt || 'Highlight image'}
             width={1200}
             height={1800}
