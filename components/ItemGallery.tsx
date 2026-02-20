@@ -234,10 +234,10 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
       {displayImages.map((image) => (
         <div key={image.uniqueId} className="item-gallery__item">
           <Image
-            src={urlFor(image.asset).auto('format').url()}
+            src={urlFor(image.asset).height(2000).quality(90).auto('format').url()}
             alt={image.alt || 'Project image'}
-            width={800}
-            height={1200}
+            width={1333}
+            height={2000}
             style={{ width: 'auto', height: '100%' }}
           />
         </div>

@@ -33,7 +33,7 @@ export default function AboutSlideshow({ images }: AboutSlideshowProps) {
       {images.map((image, index) => (
         <Image
           key={index}
-          src={urlFor(image.asset).width(1200).height(1200).url()}
+          src={urlFor(image.asset).width(1800).height(1800).quality(90).url()}
           alt={image.alt || `Slideshow image ${index + 1}`}
           fill
           style={{

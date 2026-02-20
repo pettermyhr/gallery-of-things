@@ -193,10 +193,10 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
         const content = (
           <>
             <Image
-              src={urlFor(item.thumbnail).width(800).height(1200).url()}
+              src={urlFor(item.thumbnail).width(1200).height(1800).quality(90).url()}
               alt={item.thumbnailAlt || item.title}
-              width={800}
-              height={1200}
+              width={1200}
+              height={1800}
               loading="lazy"
             />
             <span className="gallery__item-title type type-h2">{item.title}</span>
