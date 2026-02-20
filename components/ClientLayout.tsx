@@ -13,6 +13,7 @@ interface SiteSettings {
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchSettings() {
@@ -24,10 +25,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchSettings();
   }, []);
+
+  if (isLoading) {
+    return <div className="loading-screen" />;
+  }
 
   return (
     <>
