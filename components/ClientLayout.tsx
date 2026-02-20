@@ -17,6 +17,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     async function fetchSettings() {
+      const startTime = Date.now();
       try {
         const data = await client.fetch(siteSettingsQuery);
         setSettings(data);
@@ -26,7 +27,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       } catch (error) {
         console.error('Failed to fetch settings:', error);
       } finally {
-        setIsLoading(false);
+        const elapsed = Date.now() - startTime;
+        const minDelay = 500;
+        if (elapsed < minDelay) {
+          setTimeout(() => setIsLoading(false), minDelay - elapsed);
+        } else {
+          setIsLoading(false);
+        }
       }
     }
     fetchSettings();
