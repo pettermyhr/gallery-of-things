@@ -7,6 +7,7 @@ import { urlFor } from '@/lib/sanity';
 interface GalleryImage {
   asset: any;
   alt?: string;
+  aspectRatio?: number;
 }
 
 interface DisplayImage extends GalleryImage {
@@ -231,17 +232,26 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
 
   return (
     <main className="item-gallery" ref={galleryRef}>
-      {displayImages.map((image) => (
-        <div key={image.uniqueId} className="item-gallery__item">
-          <Image
-            src={urlFor(image.asset).height(2000).quality(90).auto('format').url()}
-            alt={image.alt || 'Project image'}
-            width={1333}
-            height={2000}
-            style={{ width: 'auto', height: '100%' }}
-          />
-        </div>
-      ))}
+      {displayImages.map((image) => {
+        const aspectRatio = image.asset?.metadata?.dimensions?.aspectRatio || 0.667;
+        return (
+          <div 
+            key={image.uniqueId} 
+            className="item-gallery__item is-visible"
+            style={{ aspectRatio: aspectRatio }}
+          >
+            <Image
+              src={urlFor(image.asset).height(2000).quality(90).auto('format').url()}
+              alt={image.alt || 'Project image'}
+              fill
+              sizes="(max-width: 1024px) 100vw, auto"
+              style={{ objectFit: 'cover' }}
+              placeholder="blur"
+              blurDataURL={urlFor(image.asset).width(20).quality(20).blur(50).url()}
+            />
+          </div>
+        );
+      })}
     </main>
   );
 }
