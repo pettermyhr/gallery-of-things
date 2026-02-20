@@ -481,8 +481,9 @@ a:hover {
 }
 
 .gallery__item img {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 6;
+  aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: var(--gallery-radius);
   transition: transform var(--hover-speed) ease, 
