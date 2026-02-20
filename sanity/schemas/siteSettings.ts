@@ -30,6 +30,29 @@ export default defineType({
       },
       initialValue: 'dark',
     }),
+    defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+      description: 'Title used for search engines and social media previews (defaults to Site Title if empty)',
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'SEO Description',
+      type: 'text',
+      rows: 3,
+      description: 'Description used for search engines and social media previews',
+      validation: (Rule) => Rule.max(160).warning('SEO descriptions should be under 160 characters'),
+    }),
+    defineField({
+      name: 'seoImage',
+      title: 'SEO Image',
+      type: 'image',
+      description: 'Image used for social media previews (Open Graph / Twitter Cards)',
+      options: {
+        hotspot: true,
+      },
+    }),
   ],
   preview: {
     prepare() {
