@@ -24,6 +24,11 @@ export default function Menu({ siteTitle, contactEmail }: MenuProps) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // Close menu when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   const titleChars = siteTitle.split('').map((char, i) => (
     <span 
       key={i} 
