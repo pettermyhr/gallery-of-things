@@ -241,7 +241,7 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
             style={{ aspectRatio: aspectRatio }}
           >
             <Image
-              src={urlFor(image.asset).height(2000).quality(90).auto('format').url()}
+              src={urlFor(image.asset).quality(100).auto('format').url()}
               alt={image.alt || 'Project image'}
               fill
               sizes="(max-width: 1024px) 100vw, auto"
