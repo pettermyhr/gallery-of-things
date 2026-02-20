@@ -60,12 +60,14 @@ export default function Menu({ siteTitle, contactEmail }: MenuProps) {
               <Link
                 href="/"
                 className={`menu__link type type-h2 type--uppercase ${pathname === '/' ? 'menu__link--active' : ''}`}
+                onClick={() => setIsOpen(false)}
               >
                 Projects
               </Link>
               <Link
                 href="/highlights"
                 className={`menu__link type type-h2 type--uppercase ${pathname === '/highlights' ? 'menu__link--active' : ''}`}
+                onClick={() => setIsOpen(false)}
               >
                 Highlights
               </Link>
@@ -77,12 +79,14 @@ export default function Menu({ siteTitle, contactEmail }: MenuProps) {
               <Link
                 href="/about"
                 className={`menu__link type type-h2 type--uppercase ${pathname === '/about' ? 'menu__link--active' : ''}`}
+                onClick={() => setIsOpen(false)}
               >
                 About
               </Link>
               <a
                 href={contactEmail ? `mailto:${contactEmail}` : '#'}
                 className="menu__link type type-h2 type--uppercase"
+                onClick={() => setIsOpen(false)}
               >
                 Contact
               </a>
