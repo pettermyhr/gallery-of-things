@@ -9,6 +9,30 @@
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 </head>
 <body class="item-page">
+  <nav class="menu">
+    <div class="menu__header">
+      <a href="index.html" class="menu__title type type-h2 type--uppercase"><span class="char" data-char="G">G</span><span class="char" data-char="a">a</span><span class="char" data-char="l">l</span><span class="char" data-char="l">l</span><span class="char" data-char="e">e</span><span class="char" data-char="r">r</span><span class="char" data-char="y">y</span><span class="char" data-char=" ">&nbsp;</span><span class="char" data-char="o">o</span><span class="char" data-char="f">f</span><span class="char" data-char=" ">&nbsp;</span><span class="char" data-char="T">T</span><span class="char" data-char="h">h</span><span class="char" data-char="i">i</span><span class="char" data-char="n">n</span><span class="char" data-char="g">g</span><span class="char" data-char="s">s</span></a>
+      <button class="menu__toggle" aria-expanded="false" aria-label="Toggle menu">
+        <span class="menu__toggle-icon"></span>
+      </button>
+    </div>
+    <div class="menu__content">
+      <div class="menu__group">
+        <span class="menu__group-label type type-h4 type--muted">Work</span>
+        <div class="menu__group-items">
+          <a href="index.html" class="menu__link type type-h2 type--uppercase">Projects</a>
+          <a href="highlights.html" class="menu__link type type-h2 type--uppercase">Highlights</a>
+        </div>
+      </div>
+      <div class="menu__group">
+        <span class="menu__group-label type type-h4 type--muted">Info</span>
+        <div class="menu__group-items">
+          <a href="about.html" class="menu__link type type-h2 type--uppercase">About</a>
+          <a href="#" class="menu__link type type-h2 type--uppercase">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
   <main class="item-gallery">
     <div class="item-gallery__item">
       <img src="images/R1-03386-019A.JPG" alt="Image 1" loading="lazy">
@@ -16,7 +40,37 @@
     <div class="item-gallery__item">
       <img src="images/R1-03386-011A.JPG" alt="Image 2" loading="lazy">
     </div>
+    <div class="item-gallery__item">
+      <img src="images/R1-03386-017A.JPG" alt="Image 3" loading="lazy">
+    </div>
   </main>
+  <div class="details">
+    <div class="details__content">
+      <div class="details__text">
+        <h1 class="type type-h1">Project Title</h1>
+        <h2 class="type type-h2">Project Subtitle or Description</h2>
+        <dl class="details__info">
+          <div class="details__info-row">
+            <dt class="type type-h3 type--muted">Year</dt>
+            <dd class="type type-h3">2024</dd>
+          </div>
+          <div class="details__info-row">
+            <dt class="type type-h3 type--muted">Project Type</dt>
+            <dd class="type type-h3">Photography</dd>
+          </div>
+          <div class="details__info-row">
+            <dt class="type type-h3 type--muted">Client</dt>
+            <dd class="type type-h3">Client Name</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    <div class="details__header">
+      <span class="details__label type type-h2 type--uppercase">Details</span>
+      <span class="details__icon"></span>
+    </div>
+  </div>
+  <script src="main.js"></script>
   <script src="item.js"></script>
 </body>
 </html>

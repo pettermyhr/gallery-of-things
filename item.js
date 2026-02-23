@@ -1,50 +1,53 @@
 (function() {
-  const isMobile = window.innerWidth <= 768;
   const gallery = document.querySelector('.item-gallery');
   const originalItems = Array.from(gallery.querySelectorAll('.item-gallery__item'));
   let isLoading = false;
+  let lenis = null;
+  let lazyObserver = null;
+  let isTabletOrMobile = window.innerWidth <= 1024;
 
-  // Initialize Lenis for smooth scroll
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    orientation: isMobile ? 'vertical' : 'horizontal',
-    wrapper: isMobile ? window : gallery,
-    content: isMobile ? document.documentElement : gallery,
-    smoothWheel: true,
-    wheelMultiplier: 1,
-    touchMultiplier: 2
-  });
+  function createLenis() {
+    if (lenis) {
+      lenis.destroy();
+    }
 
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  // Lazy load observer - fade in items when they enter viewport
-  const lazyObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        lazyObserver.unobserve(entry.target);
-      }
+    lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: isTabletOrMobile ? 'vertical' : 'horizontal',
+      wrapper: isTabletOrMobile ? window : gallery,
+      content: isTabletOrMobile ? document.documentElement : gallery,
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2
     });
-  }, {
-    root: isMobile ? null : gallery,
-    rootMargin: '50px',
-    threshold: 0.1
-  });
 
-  // Observe all gallery items
-  function observeItems() {
+    lenis.on('scroll', checkScroll);
+  }
+
+  function createLazyObserver() {
+    if (lazyObserver) {
+      lazyObserver.disconnect();
+    }
+
+    lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          lazyObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: isTabletOrMobile ? null : gallery,
+      rootMargin: '50px',
+      threshold: 0.1
+    });
+
+    // Observe items that aren't visible yet
     document.querySelectorAll('.item-gallery__item:not(.is-visible)').forEach(item => {
       lazyObserver.observe(item);
     });
   }
-
-  // Initial observation
-  observeItems();
 
   function loadMoreItems() {
     if (isLoading) return;
@@ -54,18 +57,19 @@
       const clone = item.cloneNode(true);
       clone.classList.remove('is-visible');
       gallery.appendChild(clone);
-      lazyObserver.observe(clone);
+      if (lazyObserver) {
+        lazyObserver.observe(clone);
+      }
     });
 
-    // Tell Lenis to recalculate dimensions after adding new content
     requestAnimationFrame(() => {
-      lenis.resize();
+      if (lenis) lenis.resize();
       isLoading = false;
     });
   }
 
   function checkScroll() {
-    if (isMobile) {
+    if (isTabletOrMobile) {
       const scrollTop = lenis.scroll;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
@@ -84,19 +88,37 @@
     }
   }
 
-  // Check on Lenis scroll event
-  lenis.on('scroll', checkScroll);
+  function raf(time) {
+    if (lenis) lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
 
-  // Initial check - load some content upfront
+  // Initialize
+  createLenis();
+  createLazyObserver();
+  requestAnimationFrame(raf);
+
+  // Initial content load
   loadMoreItems();
   loadMoreItems();
 
-  // Handle resize
-  let wasIsMobile = isMobile;
+  // Handle resize - reinitialize without reload
+  let resizeTimeout;
   window.addEventListener('resize', () => {
-    const nowIsMobile = window.innerWidth <= 768;
-    if (nowIsMobile !== wasIsMobile) {
-      location.reload();
-    }
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const nowIsTabletOrMobile = window.innerWidth <= 1024;
+      if (nowIsTabletOrMobile !== isTabletOrMobile) {
+        isTabletOrMobile = nowIsTabletOrMobile;
+        
+        // Reset scroll position
+        window.scrollTo(0, 0);
+        gallery.scrollLeft = 0;
+        
+        // Reinitialize Lenis and observer
+        createLenis();
+        createLazyObserver();
+      }
+    }, 150);
   });
 })();
