@@ -581,12 +581,10 @@ a:hover {
 }
 
 .item-gallery__item {
-  position: relative;
   flex-shrink: 0;
   height: calc(100vh - var(--gallery-gap) * 2);
   border-radius: var(--gallery-radius);
   overflow: hidden;
-  background: var(--color-surface);
 }
 
 .item-gallery__item.is-visible {
@@ -594,6 +592,8 @@ a:hover {
 }
 
 .item-gallery__item img {
+  height: 100%;
+  width: auto;
   border-radius: var(--gallery-radius);
 }
 
@@ -912,6 +912,11 @@ a:hover {
   .item-gallery__item {
     height: auto;
     width: calc(100vw - var(--gallery-gap) * 2);
+  }
+
+  .item-gallery__item img {
+    width: 100%;
+    height: auto;
   }
 }
 

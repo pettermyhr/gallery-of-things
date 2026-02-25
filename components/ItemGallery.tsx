@@ -232,26 +232,20 @@ export default function ItemGallery({ images }: ItemGalleryProps) {
 
   return (
     <main className="item-gallery" ref={galleryRef}>
-      {displayImages.map((image) => {
-        const aspectRatio = image.asset?.metadata?.dimensions?.aspectRatio || 0.667;
-        return (
-          <div 
-            key={image.uniqueId} 
-            className="item-gallery__item is-visible"
-            style={{ aspectRatio: aspectRatio }}
-          >
-            <Image
-              src={urlFor(image.asset).quality(100).auto('format').url()}
-              alt={image.alt || 'Project image'}
-              fill
-              sizes="(max-width: 1024px) 100vw, auto"
-              style={{ objectFit: 'cover' }}
-              placeholder="blur"
-              blurDataURL={urlFor(image.asset).width(20).quality(20).blur(50).url()}
-            />
-          </div>
-        );
-      })}
+      {displayImages.map((image) => (
+        <div 
+          key={image.uniqueId} 
+          className="item-gallery__item is-visible"
+        >
+          <Image
+            src={urlFor(image.asset).quality(100).auto('format').url()}
+            alt={image.alt || 'Project image'}
+            width={image.asset?.metadata?.dimensions?.width || 1800}
+            height={image.asset?.metadata?.dimensions?.height || 1200}
+            loading="lazy"
+          />
+        </div>
+      ))}
     </main>
   );
 }
