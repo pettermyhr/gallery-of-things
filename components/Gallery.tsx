@@ -20,10 +20,6 @@ interface GalleryProps {
   clickable?: boolean;
 }
 
-function isLandscape(item: GalleryItem): boolean {
-  return !!(item.thumbnailWidth && item.thumbnailHeight && item.thumbnailWidth > item.thumbnailHeight);
-}
-
 export default function Gallery({ items, clickable = true }: GalleryProps) {
   const galleryRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<any>(null);
@@ -186,8 +182,6 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
   return (
     <div className={`gallery ${!clickable ? 'highlights-page' : ''}`} ref={galleryRef}>
       {displayItems.map((item) => {
-        const landscape = isLandscape(item);
-        const itemClass = `gallery__item${landscape ? ' gallery__item--landscape' : ''}`;
         const content = (
           <>
             <Image
@@ -206,7 +200,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
             <Link
               key={item._id}
               href={`/project/${item.slug.current}`}
-              className={itemClass}
+              className="gallery__item"
             >
               {content}
             </Link>
@@ -214,7 +208,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
         }
 
         return (
-          <div key={item._id} className={itemClass}>
+          <div key={item._id} className="gallery__item">
             {content}
           </div>
         );

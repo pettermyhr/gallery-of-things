@@ -19,10 +19,6 @@ interface HighlightsGalleryProps {
   images: HighlightImage[];
 }
 
-function isLandscape(image: HighlightImage): boolean {
-  return !!(image.width && image.height && image.width > image.height);
-}
-
 export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
   const galleryRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<any>(null);
@@ -181,20 +177,17 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
 
   return (
     <div className="gallery highlights-page" ref={galleryRef}>
-      {displayImages.map((image) => {
-        const landscape = isLandscape(image);
-        return (
-          <div key={image.uniqueId} className={`gallery__item${landscape ? ' gallery__item--landscape' : ''}`}>
-            <Image
-              src={urlFor(image.asset).quality(100).auto('format').url()}
-              alt={image.alt || 'Highlight image'}
-              width={image.width || 1200}
-              height={image.height || 1800}
-              loading="lazy"
-            />
-          </div>
-        );
-      })}
+      {displayImages.map((image) => (
+        <div key={image.uniqueId} className="gallery__item">
+          <Image
+            src={urlFor(image.asset).quality(100).auto('format').url()}
+            alt={image.alt || 'Highlight image'}
+            width={image.width || 1200}
+            height={image.height || 1800}
+            loading="lazy"
+          />
+        </div>
+      ))}
     </div>
   );
 }
