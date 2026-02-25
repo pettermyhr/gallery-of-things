@@ -1,15 +1,22 @@
 (function() {
   const gallery = document.querySelector('.gallery');
   
-  // Shuffle gallery items on load
-  const itemsToShuffle = Array.from(gallery.querySelectorAll('.gallery__item'));
-  for (let i = itemsToShuffle.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    gallery.appendChild(itemsToShuffle[j]);
-    itemsToShuffle.splice(j, 1);
-  }
-  
   const originalItems = Array.from(gallery.querySelectorAll('.gallery__item'));
+
+  originalItems.forEach(item => {
+    const img = item.querySelector('img');
+    function check() {
+      if (img.naturalWidth > img.naturalHeight) {
+        item.classList.add('gallery__item--landscape');
+      }
+    }
+    if (img.complete && img.naturalWidth) {
+      check();
+    } else {
+      img.addEventListener('load', check);
+    }
+  });
+
   let isLoadingTop = false;
   let isLoadingBottom = false;
   let lenis = null;
@@ -35,8 +42,7 @@
 
   function cloneItems() {
     const fragment = document.createDocumentFragment();
-    const shuffled = [...originalItems].sort(() => Math.random() - 0.5);
-    shuffled.forEach(item => {
+    [...originalItems].forEach(item => {
       const clone = item.cloneNode(true);
       clone.classList.remove('is-visible');
       fragment.appendChild(clone);
