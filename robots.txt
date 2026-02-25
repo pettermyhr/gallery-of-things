@@ -13,4 +13,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://galleryofthings.com/sitemap.xml
+Sitemap: https://halinafoto.no/sitemap.xml
