@@ -21,8 +21,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       try {
         const data = await client.fetch(siteSettingsQuery);
         setSettings(data);
-        if (data?.theme === 'light') {
-          document.documentElement.setAttribute('data-theme', 'light');
+        if (data?.theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error);
@@ -46,7 +46,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <>
       <Menu
-        siteTitle={settings?.siteTitle || 'Gallery of Things'}
+        siteTitle={settings?.siteTitle || 'Halina Foto'}
         contactEmail={settings?.contactEmail}
       />
       {children}

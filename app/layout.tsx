@@ -3,8 +3,8 @@ import './globals.css';
 import ClientLayout from '@/components/ClientLayout';
 
 export const metadata: Metadata = {
-  title: 'Gallery of Things',
-  description: 'A photography portfolio',
+  title: 'Halina Foto',
+  description: 'Documentary and fine art photography portfolio by Halina Foto, an Oslo-based photographer. Editorial, portrait, documentary, and commercial work.',
 };
 
 export default function RootLayout({
