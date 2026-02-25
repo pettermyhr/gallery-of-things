@@ -21,8 +21,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       try {
         const data = await client.fetch(siteSettingsQuery);
         setSettings(data);
-        if (data?.theme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
+        if (data?.theme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error);

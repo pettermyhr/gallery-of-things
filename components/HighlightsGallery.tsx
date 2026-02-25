@@ -7,6 +7,8 @@ import { urlFor } from '@/lib/sanity';
 interface HighlightImage {
   asset: any;
   alt?: string;
+  width?: number;
+  height?: number;
 }
 
 interface DisplayImage extends HighlightImage {
@@ -17,13 +19,8 @@ interface HighlightsGalleryProps {
   images: HighlightImage[];
 }
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+function isLandscape(image: HighlightImage): boolean {
+  return !!(image.width && image.height && image.width > image.height);
 }
 
 export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
@@ -38,17 +35,16 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
   useEffect(() => {
     if (!images.length) return;
     
-    const shuffled = shuffleArray(images);
-    originalImages.current = shuffled;
+    originalImages.current = images;
     
     // Create initial display: 3 sets above + original + 3 sets below
     const initialImages: DisplayImage[] = [];
     for (let i = 0; i < 3; i++) {
-      initialImages.push(...shuffleArray(shuffled).map((img, idx) => ({ ...img, uniqueId: `top-${i}-${idx}` })));
+      initialImages.push(...images.map((img, idx) => ({ ...img, uniqueId: `top-${i}-${idx}` })));
     }
-    initialImages.push(...shuffled.map((img, idx) => ({ ...img, uniqueId: `orig-${idx}` })));
+    initialImages.push(...images.map((img, idx) => ({ ...img, uniqueId: `orig-${idx}` })));
     for (let i = 0; i < 3; i++) {
-      initialImages.push(...shuffleArray(shuffled).map((img, idx) => ({ ...img, uniqueId: `bottom-${i}-${idx}` })));
+      initialImages.push(...images.map((img, idx) => ({ ...img, uniqueId: `bottom-${i}-${idx}` })));
     }
     
     setDisplayImages(initialImages);
@@ -119,7 +115,7 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
     isLoadingBottom.current = true;
 
     setDisplayImages(prev => {
-      const newImages = shuffleArray(originalImages.current).map((img, idx) => ({
+      const newImages = originalImages.current.map((img, idx) => ({
         ...img,
         uniqueId: `append-${Date.now()}-${idx}`
       }));
@@ -143,7 +139,7 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
     const offsetBefore = firstItem?.offsetTop || 0;
 
     setDisplayImages(prev => {
-      const newImages = shuffleArray(originalImages.current).map((img, idx) => ({
+      const newImages = originalImages.current.map((img, idx) => ({
         ...img,
         uniqueId: `prepend-${Date.now()}-${idx}`
       }));
@@ -185,17 +181,20 @@ export default function HighlightsGallery({ images }: HighlightsGalleryProps) {
 
   return (
     <div className="gallery highlights-page" ref={galleryRef}>
-      {displayImages.map((image) => (
-        <div key={image.uniqueId} className="gallery__item">
-          <Image
-            src={urlFor(image.asset).quality(100).auto('format').url()}
-            alt={image.alt || 'Highlight image'}
-            width={1200}
-            height={1800}
-            loading="lazy"
-          />
-        </div>
-      ))}
+      {displayImages.map((image) => {
+        const landscape = isLandscape(image);
+        return (
+          <div key={image.uniqueId} className={`gallery__item${landscape ? ' gallery__item--landscape' : ''}`}>
+            <Image
+              src={urlFor(image.asset).quality(100).auto('format').url()}
+              alt={image.alt || 'Highlight image'}
+              width={image.width || 1200}
+              height={image.height || 1800}
+              loading="lazy"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

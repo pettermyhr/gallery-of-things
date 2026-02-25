@@ -27,22 +27,22 @@
    CSS Custom Properties (easy to sync with Sanity later)
    -------------------------------------------------------------------------- */
 :root {
-  /* Colors - Light Mode (default) */
+  /* Colors - Dark Mode (default) */
   --color-primary: #2c3e50;
   --color-secondary: #3498db;
   --color-accent: #e74c3c;
-  --color-background: #ffffff;
-  --color-surface: #f5f5f5;
-  --color-text: #000000;
-  --color-text-muted: rgba(0, 0, 0, 0.5);
-  --color-border: rgba(0, 0, 0, 0.2);
-  --color-ui-bg: rgba(255, 255, 255, 0.75);
-  --color-ui-btn: rgba(255, 255, 255, 0.4);
-  --color-ui-btn-hover: rgba(0, 0, 0, 0.1);
+  --color-background: #000000;
+  --color-surface: #111111;
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-border: rgba(255, 255, 255, 0.2);
+  --color-ui-bg: rgba(0, 0, 0, 0.75);
+  --color-ui-btn: rgba(0, 0, 0, 0.4);
+  --color-ui-btn-hover: rgba(255, 255, 255, 0.2);
 
   /* Gallery */
   --gallery-gap: 6px;
-  --gallery-columns: 5;
+  --gallery-columns: 6;
   --gallery-radius: 8px;
   
   /* Hover effect - adjust these values */
@@ -73,15 +73,15 @@
   --transition-base: 300ms ease;
 }
 
-[data-theme="dark"] {
-  --color-background: #000000;
-  --color-surface: #111111;
-  --color-text: #ffffff;
-  --color-text-muted: rgba(255, 255, 255, 0.5);
-  --color-border: rgba(255, 255, 255, 0.2);
-  --color-ui-bg: rgba(0, 0, 0, 0.75);
-  --color-ui-btn: rgba(0, 0, 0, 0.4);
-  --color-ui-btn-hover: rgba(255, 255, 255, 0.2);
+[data-theme="light"] {
+  --color-background: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-text: #000000;
+  --color-text-muted: rgba(0, 0, 0, 0.5);
+  --color-border: rgba(0, 0, 0, 0.2);
+  --color-ui-bg: rgba(255, 255, 255, 0.75);
+  --color-ui-btn: rgba(255, 255, 255, 0.4);
+  --color-ui-btn-hover: rgba(0, 0, 0, 0.1);
 }
 
 /* --------------------------------------------------------------------------
@@ -283,7 +283,7 @@ a:hover {
 .menu__title:hover,
 .menu__title:visited,
 .menu__title:active {
-  color: var(--color-text);
+  color: #ffffff;
 }
 
 .menu__title .char {
@@ -470,6 +470,7 @@ a:hover {
 .gallery {
   display: grid;
   grid-template-columns: repeat(var(--gallery-columns), 1fr);
+  grid-auto-flow: dense;
   gap: var(--gallery-gap);
   padding: var(--gallery-gap);
 }
@@ -482,7 +483,13 @@ a:hover {
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
   position: relative;
-  background: var(--color-surface);
+  background: #000000;
+  aspect-ratio: 4 / 6;
+}
+
+.gallery__item--landscape {
+  aspect-ratio: auto;
+  grid-column: span 2;
 }
 
 .gallery__item.is-visible {
@@ -493,7 +500,7 @@ a:hover {
 .gallery__item img {
   display: block;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  height: 100%;
   object-fit: cover;
   border-radius: var(--gallery-radius);
   transition: transform var(--hover-speed) ease, 
@@ -530,7 +537,7 @@ a:hover {
   opacity: 0;
   transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
-  color: var(--color-text);
+  color: #ffffff;
 }
 
 .gallery__item:hover .gallery__item-title {
@@ -882,7 +889,7 @@ a:hover {
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
   :root {
-    --gallery-columns: 3;
+    --gallery-columns: 4;
   }
 
   /* Tablet - menu and details */

@@ -14,7 +14,9 @@ export const projectsQuery = groq`
     title,
     slug,
     thumbnail,
-    "thumbnailAlt": thumbnail.alt
+    "thumbnailAlt": thumbnail.alt,
+    "thumbnailWidth": thumbnail.asset->metadata.dimensions.width,
+    "thumbnailHeight": thumbnail.asset->metadata.dimensions.height
   }
 `;
 
@@ -38,7 +40,9 @@ export const highlightsQuery = groq`
   *[_type == "highlightsPage"][0] {
     images[] {
       asset,
-      alt
+      alt,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
     }
   }
 `;

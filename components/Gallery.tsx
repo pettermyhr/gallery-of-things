@@ -11,6 +11,8 @@ interface GalleryItem {
   slug: { current: string };
   thumbnail: any;
   thumbnailAlt?: string;
+  thumbnailWidth?: number;
+  thumbnailHeight?: number;
 }
 
 interface GalleryProps {
@@ -18,13 +20,8 @@ interface GalleryProps {
   clickable?: boolean;
 }
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+function isLandscape(item: GalleryItem): boolean {
+  return !!(item.thumbnailWidth && item.thumbnailHeight && item.thumbnailWidth > item.thumbnailHeight);
 }
 
 export default function Gallery({ items, clickable = true }: GalleryProps) {
@@ -39,17 +36,16 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
   useEffect(() => {
     if (!items.length) return;
     
-    const shuffled = shuffleArray(items);
-    originalItems.current = shuffled;
+    originalItems.current = items;
     
     // Create initial display: 3 sets above + original + 3 sets below
     const initialItems: GalleryItem[] = [];
     for (let i = 0; i < 3; i++) {
-      initialItems.push(...shuffleArray(shuffled).map((item, idx) => ({ ...item, _id: `top-${i}-${idx}-${item._id}` })));
+      initialItems.push(...items.map((item, idx) => ({ ...item, _id: `top-${i}-${idx}-${item._id}` })));
     }
-    initialItems.push(...shuffled);
+    initialItems.push(...items);
     for (let i = 0; i < 3; i++) {
-      initialItems.push(...shuffleArray(shuffled).map((item, idx) => ({ ...item, _id: `bottom-${i}-${idx}-${item._id}` })));
+      initialItems.push(...items.map((item, idx) => ({ ...item, _id: `bottom-${i}-${idx}-${item._id}` })));
     }
     
     setDisplayItems(initialItems);
@@ -123,7 +119,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
     isLoadingBottom.current = true;
 
     setDisplayItems(prev => {
-      const newItems = shuffleArray(originalItems.current).map((item, idx) => ({
+      const newItems = originalItems.current.map((item, idx) => ({
         ...item,
         _id: `append-${Date.now()}-${idx}-${item._id}`
       }));
@@ -147,7 +143,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
     const offsetBefore = firstItem?.offsetTop || 0;
 
     setDisplayItems(prev => {
-      const newItems = shuffleArray(originalItems.current).map((item, idx) => ({
+      const newItems = originalItems.current.map((item, idx) => ({
         ...item,
         _id: `prepend-${Date.now()}-${idx}-${item._id}`
       }));
@@ -190,13 +186,15 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
   return (
     <div className={`gallery ${!clickable ? 'highlights-page' : ''}`} ref={galleryRef}>
       {displayItems.map((item) => {
+        const landscape = isLandscape(item);
+        const itemClass = `gallery__item${landscape ? ' gallery__item--landscape' : ''}`;
         const content = (
           <>
             <Image
               src={urlFor(item.thumbnail).quality(100).auto('format').url()}
               alt={item.thumbnailAlt || item.title}
-              width={1200}
-              height={1800}
+              width={item.thumbnailWidth || 1200}
+              height={item.thumbnailHeight || 1800}
               loading="lazy"
             />
             <span className="gallery__item-title type type-h2">{item.title}</span>
@@ -208,7 +206,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
             <Link
               key={item._id}
               href={`/project/${item.slug.current}`}
-              className="gallery__item"
+              className={itemClass}
             >
               {content}
             </Link>
@@ -216,7 +214,7 @@ export default function Gallery({ items, clickable = true }: GalleryProps) {
         }
 
         return (
-          <div key={item._id} className="gallery__item">
+          <div key={item._id} className={itemClass}>
             {content}
           </div>
         );
